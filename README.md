@@ -38,15 +38,12 @@ from page_scraper import WikiPageScraper
 
 page_scraper = WikiPageScraper(n_processes=1)
 
-pages = page_scraper.run(['https://en.wikipedia.org/wiki/Aa.'])
+pages = page_scraper.run(['https://en.wikipedia.org/wiki/Aa._intercostales'])
 
-pages
+pages[0]
 # Output:
-#[{'title': 'Intercostal arteries',
-#  'text': ['. The latter gives out the remaining anterior intercostal branches. Two in number in each space, these small vessels pass lateralward, one lying near the lower margin of the',
-#   'It gives off intercostal branches to the seventh, eighth, and ninth intercostal spaces; these diminish in size as the spaces decrease in length, and are distributed in a manner precisely similar to the intercostal arteries from the',
-#   'The right aortic intercostals are longer than the left because of the position of the aorta on the left side of the vertebral column; they pass across the bodies of the',
-#   'of the given space.  The vein is superior to the artery, and the intercostal nerve is inferior to it. Commonly, the mnemonic, "Van," is used to recall the order of the vein, artery and nerve, from superior to inferior.']}]
+#{'title': 'Intercostal arteries',
+# 'text': ['The intercostal arteries are a group of arteries that supply the area between the ribs ("costae"), called the intercostal space. The highest intercostal artery (supreme intercostal artery or superior intercostal artery) is an artery in the human body that usually gives rise to the first and second posterior intercostal arteries, which supply blood to their corresponding intercostal space.  It usually arises from the costocervical trunk, which is a branch of the subclavian artery.  Some anatomists may contend that there is no supreme intercostal artery, only a supreme intercostal vein.', ...
 ```
 
 There is a Jupyter Notebook called `playground.ipynb`. Take a look and play a little with the scraper.
