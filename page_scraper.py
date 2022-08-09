@@ -30,8 +30,8 @@ class WikiPageScraper:
         
         with Pool(self.n_processes) as p:
             scraped_pages = p.map(self.scrape_pages, pages)
-            
-        scraped_pages_ = scraped_pages[0]
+
+        scraped_pages_ = []
         for pages_list in scraped_pages:
             scraped_pages_.extend(pages_list)
         return scraped_pages_
