@@ -6,8 +6,6 @@ I know that there is a publicly available Wikipedia dataset (https://huggingface
 
 The code is somewhat optimized (`BeautifulSoup` uses `lxml` parser and `cchardet` library and some other minor tweaks), so you can use to get lots of text in a reasonable amount of time.
 
-This project is in progress. Later I'll add some helper scripts so that you can call the scraper from terminal and get data in one command.
-
 ### Scripts
 
 #### WikiLinksScraper
@@ -15,7 +13,7 @@ This project is in progress. Later I'll add some helper scripts so that you can 
 This class is used for scraping a list of Wikipedia article links.
 
 ```python
-from links_scraper import WikiLinksScraper
+from wiki_scraper import WikiLinksScraper
 
 scraper = WikiLinksScraper(stride=10, n_max_links_per_index=10, n_processes=2)
 
@@ -34,7 +32,7 @@ len(links), links[:4]
 This class is used to scrape the actual articles.
 
 ```python
-from page_scraper import WikiPageScraper
+from wiki_scraper import WikiPageScraper
 
 page_scraper = WikiPageScraper(n_processes=1)
 
@@ -47,3 +45,30 @@ pages[0]
 ```
 
 There is a Jupyter Notebook called `playground.ipynb`. Take a look and play a little with the scraper.
+
+## Usage
+
+### Installation
+
+Clone the repository and run the following in its folder:
+```bash
+pip install https://github.com/oKatanaaa/Wikipedia-Scraper
+```
+
+### Running
+
+Run the following to scrape a few articles:
+```bash
+python -m wiki_scraper.run -s articles
+```
+It will fetch about a thousand files in about a minute (depending on your internet connection and pc performance).
+
+All arguments:
+- `-np, --n_processes`. Number of processes to start within the page scraper. Default: 4.
+- `-nt, --n_threads`. Number of threads to start within the link scraper. Default: 4.
+- `-s, --save_folder`. Path to the folder where to save the articles.
+- `-st, --stride`. Scrape only each `stride`th link. Default: 2 (meaning it'll take every second link). This argument controls data variety to some extent.
+- `-max_l, --max_links_per_index`. Maximum number of links per index to scrape. Default: 100.
+- `-min_c, --min_chars`. Minimum number of characters per paragraph. Paragraphs with fewer characters are skipped. Default: 512. I recommend to leave it as it is, but you may adjust it to your needs of course.
+- `-bs, --batch_size`. Links are grouped in batches and then scraped in multiple processes. Default: 128. Lower the batch size - higher the string pickling overhead. 128 seems to be optimal.
+- `-ind, --indices`. Indices to scrape from. Example: Aa,Ba,Ca. (if you don't get what indices are, check out this link https://en.wikipedia.org/wiki/Wikipedia:Contents/A%E2%80%93Z_index)

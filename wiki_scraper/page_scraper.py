@@ -23,17 +23,22 @@ class WikiPageScraper:
         assert min_n_chars >= 0
         self.min_n_chars = min_n_chars
         self.n_processes = n_processes
+        self.title_cache = set()
         
     def run(self, pages: List[str]) -> List[dict]:
         stride = (len(pages) + self.n_processes - 1) // self.n_processes
-        pages = [pages[i: i + stride] for i in range(0, len(pages), stride)]
+        pages: List[List[str]] = [pages[i: i + stride] for i in range(0, len(pages), stride)]
         
         with Pool(self.n_processes) as p:
             scraped_pages = p.map(self.scrape_pages, pages)
 
         scraped_pages_ = []
+        titles = set()
         for pages_list in scraped_pages:
-            scraped_pages_.extend(pages_list)
+            for page in pages_list:
+                if not page['title'] in titles:
+                    scraped_pages_.append(page)
+                    titles.add(page['title'])
         return scraped_pages_
     
     def scrape_pages(self, page_urls: List[str]) -> List[dict]:
@@ -50,6 +55,11 @@ class WikiPageScraper:
         soup = BeautifulSoup(page.text, 'lxml')
         
         title = soup.find(id='firstHeading').text
+        if title in self.title_cache:
+            return {'title': title, 'text': ''}
+        else:
+            self.title_cache.add(title)
+            
         content = soup.find_all('div', class_='mw-parser-output')[-1]
         
         return {'title': title, 'text': self.extract_text(content)}
