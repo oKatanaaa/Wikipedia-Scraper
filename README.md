@@ -1,8 +1,8 @@
 ### Wikipedia Scraper
 
-This repo contains a simple Wikipedia scraper that allows to downloads a huge pile of text. It uses `requests` to download pages and `BeautifulSoup` to parse them.
+This repo contains a simple Wikipedia scraper that allows to download a huge pile of text. It uses `requests` to download pages and `BeautifulSoup` to parse them.
 
-I know that there is a publicly available Wikipedia dataset (https://huggingface.co/datasets/wikipedia), I just wanted to try out scraping. It turned out to be pretty easy (and fun!).
+I know there is a publicly available Wikipedia dataset (https://huggingface.co/datasets/wikipedia), I just wanted to try out scraping. It turned out to be pretty easy (and fun!).
 
 The code is somewhat optimized (`BeautifulSoup` uses `lxml` parser and `cchardet` library and some other minor tweaks), so you can use to get lots of text in a reasonable amount of time.
 
@@ -29,7 +29,7 @@ len(links), links[:4]
 
 #### WikiPageScraper
 
-This class is used to scrape the actual articles.
+This class is used to scrape the actual articles. Since different links may lead to the same page, there is a filtering logic inside the scraper, so don't be surprized if you get less scraped pages than there are links (some of them were duplicates or did not contain much text).
 
 ```python
 from wiki_scraper import WikiPageScraper
@@ -50,18 +50,18 @@ There is a Jupyter Notebook called `playground.ipynb`. Take a look and play a li
 
 ### Installation
 
-Clone the repository and run the following in its folder:
+Run the following command:
 ```bash
 pip install git+https://github.com/oKatanaaa/Wikipedia-Scraper
 ```
 
 ### Running
 
-Run the following to scrape a few articles:
+As a starting point, run the following to scrape a few articles:
 ```bash
 python -m wiki_scraper.run -s articles
 ```
-It will fetch about a thousand files in about a minute (depending on your internet connection and pc performance).
+It will create an `articles` folder and fetch about a thousand files in a minute in it (depends on your internet connection and pc performance).
 
 All arguments:
 - `-np, --n_processes`. Number of processes to start within the page scraper. Default: 4.
