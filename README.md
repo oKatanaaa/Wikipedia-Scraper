@@ -52,7 +52,7 @@ There is a Jupyter Notebook called `playground.ipynb`. Take a look and play a li
 
 Clone the repository and run the following in its folder:
 ```bash
-pip install https://github.com/oKatanaaa/Wikipedia-Scraper
+pip install git+https://github.com/oKatanaaa/Wikipedia-Scraper
 ```
 
 ### Running
