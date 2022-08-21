@@ -9,7 +9,7 @@ from multiprocessing import Pool
 from multiprocessing.pool import ThreadPool
 import os
 from .utils import infer_folder_name
-
+from time import sleep
 
 
 class WikiPageScraperV2:    
@@ -35,12 +35,19 @@ class WikiPageScraperV2:
         self.save_folder = save_folder
         self.title_cache = set()
         
-    def run(self, pages: List[str]) -> List[dict]:  # type: ignore
+    def run(self, pages: List[str], pool: Optional[Pool] = None) -> List[dict]:  # type: ignore
         stride = (len(pages) + self.n_processes - 1) // self.n_processes
         pages: List[List[str]] = [pages[i: i + stride] for i in range(0, len(pages), stride)]  # type: ignore
         
-        with Pool(self.n_processes) as p:
-            scraped_pages = p.map(self.scrape_pages, pages)
+        is_local = False
+        if pool is None:
+            is_local = True
+            pool = Pool(self.n_processes)
+            
+        scraped_pages = pool.map(self.scrape_pages, pages)
+        
+        if is_local:
+            pool.close()
 
         scraped_pages_ = []
         titles = set()
@@ -57,13 +64,16 @@ class WikiPageScraperV2:
         
         def scrape(url):
             req = session.get(url)
-            
-            try:
-                scraped_page = self.scrape_page(req)
-            except Exception as ex:
-                print(f'Exception in {url}')
-                traceback.print_tb(ex.__traceback__)
+            # Status code 429 means too many requests, need to wait a little
+            while req.status_code == 429:
+                sleep(0.01)
+                req = session.get(url)
+                
+            if req.status_code != 200:
+                print(f'Could not retrieve page from {url}. Code: {req.status_code}. Reason: {req.reason}')
                 return
+            
+            scraped_page = self.scrape_page(req)
             
             if len(scraped_page['text']) == 0:
                 return

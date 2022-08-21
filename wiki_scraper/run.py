@@ -3,6 +3,7 @@ from .links_scraper_iter import WikiLinksScraperIter
 from .page_scraper_v2 import WikiPageScraperV2
 import argparse
 import os
+from multiprocessing import Pool
 
 
 DEFAULT_N_PROCESSES = 4
@@ -16,18 +17,18 @@ DEFAULT_BATCH_SIZE = 128
 def main(links_scraper: WikiLinksScraperIter, page_scraper: WikiPageScraperV2, batch_size: int, indices: Optional[List[str]]):
     links_scraper.run_async(indices=indices)
     it = links_scraper.make_iterator()
+    pool = Pool(page_scraper.n_processes)
     batch = []
     for link in it:
         if len(batch) < batch_size:
             batch.append(link)
             continue
         
-        page_scraper.run(batch)
+        page_scraper.run(batch, pool=pool)
         batch = []
     
     if len(batch) > 0:
         page_scraper.run(batch)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
