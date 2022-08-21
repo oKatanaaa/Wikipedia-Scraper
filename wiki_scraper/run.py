@@ -56,7 +56,7 @@ if __name__ == '__main__':
     )
     page_scraper = WikiPageScraperV2(
         min_n_chars=args.min_chars, n_processes=args.n_processes, 
-        n_threads_per_process=2, save_folder=args.save_folder
+        n_threads_per_process=1, save_folder=args.save_folder
     )
     
     os.makedirs(args.save_folder, exist_ok=True)
