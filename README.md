@@ -73,18 +73,26 @@ All arguments:
 - `-bs, --batch_size`. Links are grouped in batches and then scraped in multiple processes. Default: 128. Lower the batch size - higher the string pickling overhead. 128 seems to be optimal.
 - `-ind, --indices`. Indices to scrape from. Example: Aa,Ba,Ca. (if you don't get what indices are, check out this link https://en.wikipedia.org/wiki/Wikipedia:Contents/A%E2%80%93Z_index)
 
-### FAQ
+## FAQ
 
-Q: How much of Wikipedia can I fetch with this?
-A: Short answer: a lot. Long answer: it depends. 
-In theory, the library itself can load all of Wikipedia articles (there is other stuff as well, but this all is only about articles), but not all them may be stored on your machine. Depending on your OS and data storage, you can store different number of files in a folder. Roughly speaking, 65000 for Linux and 10000 for Windows (physically you can store more, but there might be unexpected behaviour). Once you've reached the limit for your storage, system stops saving files.
+**Q: How much Wikipedia can I fetch with this?**
+
+**A**: Short answer: a lot (maybe most of it). Long answer: it depends. 
+
+In theory, the library itself can load all of Wikipedia articles (there is other stuff as well, but this all is only about articles), but not all them may be stored on your machine. Depending on your OS and data storage, you can store different number of files in a folder. Roughly speaking, 65000 for Linux and 10000 for Windows (physically you can store more, but there might be unexpected behaviour). Once you've reached the limit for your storage, system stops saving files. 
+
 Considering the worst case, you'll be able to fetch: 24 (letters) * 24 (letters) * 2 (upcase and lowercase) * 10000 (storage capacity) = 11_520_000. That's considering that articles are uniformly distributed among indices (Aa, Ab, ..., Zx, Zc, etc), which in all likelihood is not the case.
 
-Q: How long does it take to fetch the data?
-A: With default parameters it is roughly a minute for a thousand articles.
+---
+
+**Q: How long does it take to fetch the data?**
+
+**A**: With default parameters it is roughly a minute for a thousand articles on my machine.
+
 My configuration:
-    - CPU: Ryzen 7 4800H (8 cores, 16 threads, 2.9 GHz).
-    - SSD storage (don't know the speed, but believe it is fast).
-    - WiFi Internet connection with about 50 MB/s speed.
+- CPU: Ryzen 7 4800H (8 cores, 16 threads, 2.9 GHz).
+- SSD storage.
+- WiFi Internet connection with about 50 MB/s speed.
+
 Guess I'll add some more measurements later.
 
