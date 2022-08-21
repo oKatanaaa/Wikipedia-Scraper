@@ -85,7 +85,8 @@ class WikiPageScraperV2:
     def scrape_page(self, page: requests.models.Response) -> dict:
         soup = BeautifulSoup(page.text, 'lxml')
         
-        title = soup.find(id='firstHeading').text  # type: ignore
+        heading = soup.find(id='firstHeading')
+        title = page.url.split('/')[-1] if heading is None else heading.text  # type: ignore
         
         if title in self.title_cache:
             return {'title': title, 'text': ''}
