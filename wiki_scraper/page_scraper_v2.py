@@ -1,6 +1,7 @@
 import requests
 import cchardet
 import lxml
+import traceback
 from bs4 import BeautifulSoup
 from typing import List, Optional, Tuple
 import bs4
@@ -56,7 +57,14 @@ class WikiPageScraperV2:
         
         def scrape(url):
             req = session.get(url)
-            scraped_page = self.scrape_page(req)
+            
+            try:
+                scraped_page = self.scrape_page(req)
+            except Exception as ex:
+                print(f'Exception in {url}')
+                traceback.print_tb(ex.__traceback__)
+                return
+            
             if len(scraped_page['text']) == 0:
                 return
             
