@@ -7,6 +7,7 @@ import bs4
 from multiprocessing import Pool
 from multiprocessing.pool import ThreadPool
 import os
+from .utils import infer_folder_name
 
 
 
@@ -62,7 +63,18 @@ class WikiPageScraperV2:
             scraped_pages.append(scraped_page)
             
             if self.save_folder is not None:
-                with open(os.path.join(self.save_folder, f"{scraped_page['title'].replace('/', '')}.txt"), 'w') as f:
+                # We have to split article files among different folder
+                # because we may hit the storage limit (65000 files max in one folder).
+                # Here we take the first 2 characters of the article title and use it as 
+                # folder name.
+                folder_name = infer_folder_name(scraped_page['title'])
+                os.makedirs(os.path.join(self.save_folder, folder_name), exist_ok=True)
+                filename = os.path.join(
+                    self.save_folder, 
+                    folder_name,
+                    f"{scraped_page['title'].replace('/', '')}.txt"
+                )
+                with open(filename, 'w') as f:
                     f.write('\n\n'.join(scraped_page['text']))
         
         with ThreadPool(self.n_threads_per_process) as p:
